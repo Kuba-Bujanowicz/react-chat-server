@@ -1,7 +1,7 @@
 import { User } from "../models/User";
 import { UserErrors } from "../models/UserErrors";
 
-class Validator {
+export class Validator {
     private static initErrors<T>() {
         return {} as T;
     } 
