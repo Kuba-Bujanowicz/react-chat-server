@@ -13,10 +13,8 @@ const logout = (req: Request, res: Response) => {
     res.json("Logout")
 }
 
-const User = {
+export const User = {
     signup,
     signin,
     logout
 }
-
-export default User;
