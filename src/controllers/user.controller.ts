@@ -13,7 +13,7 @@ const logout = (req: Request, res: Response) => {
     res.json("Logout")
 }
 
-export const User = {
+export const UserController = {
     signup,
     signin,
     logout
