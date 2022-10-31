@@ -1,7 +1,7 @@
 import Axios, { AxiosResponse } from 'axios'
 
 export class Api {
-    private static baseUrl = 'http://localhost:3001/'
+    private static baseUrl = 'http://localhost:3001'
 
     private static getUrl(url: string) {
         return this.baseUrl + url
