@@ -1,8 +1,11 @@
 # dependecies
-node_modules
+/node_modules
 
 # production
 /dist
+
+# development
+/src/database
 
 # misc
 .env
