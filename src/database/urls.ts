@@ -1,1 +1,1 @@
-const USER_URL = '/users'
+const USERS_URL = '/users'
