@@ -13,7 +13,7 @@ const app: Express = express();
 app.use(cors())
 
 // Routes
-app.use(Routes.UserRoutes)
+app.use('/', Routes.UserRoutes)
 
 const httpServer = createServer(app);
 
