@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\" \"json-server --watch src/database/users.json\""
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\" \"json-server --watch -d 3000 -p 3001 src/database/users.json\""
   },
   "dependencies": {
     "cors": "^2.8.5",
