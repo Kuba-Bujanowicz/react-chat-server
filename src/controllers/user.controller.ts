@@ -20,7 +20,7 @@ const signup = async (req: Request, res: Response) => {
     try {
         const userResponse = await Api.get(USERS_URL, { email: user.email })
         if (userResponse) {
-            return res.status(CONFLICT).json({ errors: 'User already exists' })
+            return res.status(CONFLICT).json({ error: 'User already exists' })
         }
         user.id = uuidv4()
         await Api.post(USERS_URL, user);
