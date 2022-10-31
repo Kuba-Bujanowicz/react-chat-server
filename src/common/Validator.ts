@@ -29,7 +29,6 @@ export class Validator {
 
         errors.email = this.validateEmail(user.email)
         errors.name = this.validateText(user.name, 'Name')
-        
 
         return errors
     }
