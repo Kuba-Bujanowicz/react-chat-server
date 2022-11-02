@@ -24,8 +24,11 @@ export class Api {
 
     static async put(url: string, data: any, id: string | number) {
         const response = await Axios.put(this.getUrl(url, id), data)
-        console.log('put');
+        return this.responseHandler(response)
+    }
 
+    static async delete(url: string, params?: RequestParams) {
+        const response = await Axios.delete(this.getUrl(url), { params })
         return this.responseHandler(response)
     }
 }
