@@ -19,9 +19,8 @@ const getUsers = async (req: Request, res: Response) => {
 const getUser = async (req: Request, res: Response) => {
     const email = req.params.email;
     const id = req.params.id;
-    const name = req.params.name;
 
-    const data = email && 'email' || id && 'id' || name && 'name' || 'id';
+    const data = email && 'email' || id && 'id' || '';
 
     const user = await Api.get(USERS_URL, {
         [data]: req.params[data]
