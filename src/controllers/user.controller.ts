@@ -35,6 +35,11 @@ const signup = async (req: Request, res: Response) => {
 const signin = (req: Request, res: Response) => {
     res.json("Signed In")
 }
+
+const getUsers = (req: Request, res: Response) => {
+    res.json('Success')
+}
+
 // Logout
 const logout = (req: Request, res: Response) => {
     res.json("Logout")
@@ -43,5 +48,6 @@ const logout = (req: Request, res: Response) => {
 export const UserController = {
     signup,
     signin,
+    getUsers,
     logout
 }
