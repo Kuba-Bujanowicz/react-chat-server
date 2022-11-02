@@ -5,6 +5,7 @@ import { USERS_URL } from "../common/const/urls";
 import { User } from "../models/User";
 import { Validator } from "../common/base/Validator";
 import { v4 as uuidv4 } from 'uuid'
+import { Auth } from "../common/base/Auth";
 
 // Sign Up
 const signup = async (req: Request, res: Response) => {
@@ -19,12 +20,16 @@ const signup = async (req: Request, res: Response) => {
     //Check if user already exist in database
     const userResponse = await Api.get(USERS_URL, { email: user.email })
     if (userResponse) {
-        return res.status(CONFLICT).json({ errors: { email: 'This email already exists' } })
+        return res.status(CONFLICT).json({ email: 'This email already exists' })
     }
     user.id = uuidv4()
+    user.isActive = true;
     await Api.post(USERS_URL, user);
 
-    return res.json("Signed Up")
+    //Generate jwt token
+    const token = Auth.generateToken(user.id)
+
+    return res.json(token)
 }
 // Sign In
 const signin = (req: Request, res: Response) => {
