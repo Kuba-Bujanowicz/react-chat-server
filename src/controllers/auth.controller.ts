@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { Api } from "../common/base/Api";
-import { BAD_REQUEST, CONFLICT, NOT_FOUND } from "../common/const/codes";
+import { BAD_REQUEST, CONFLICT, NOT_FOUND, OK } from "../common/const/codes";
 import { USERS_URL } from "../common/const/urls";
 import { User } from "../models/User";
 import { Validator } from "../common/base/Validator";
@@ -58,11 +58,27 @@ const signin = async (req: Request, res: Response) => {
 
 // Logout
 const logout = (req: Request, res: Response) => {
+
     res.json("Logout")
+}
+
+// Delete account
+const deleteAccount = async (req: Request, res: Response) => {
+    const email = req.body.email;
+
+    //Delete a user
+    try {
+        await Api.delete(USERS_URL, { email })
+    } catch {
+        return res.status(BAD_REQUEST).json('Cannot delete user')
+    }
+
+    return res.status(OK).json('User deleted successfully');
 }
 
 export const AuthController = {
     signup,
     signin,
-    logout
+    logout,
+    deleteAccount
 }
