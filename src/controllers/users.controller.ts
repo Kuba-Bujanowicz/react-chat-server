@@ -17,14 +17,9 @@ const getUsers = async (req: Request, res: Response) => {
 
 //Get specific user
 const getUser = async (req: Request, res: Response) => {
-    const email = req.params.email;
     const id = req.params.id;
 
-    const data = email && 'email' || id && 'id' || '';
-
-    const user = await Api.get(USERS_URL, {
-        [data]: req.params[data]
-    })
+    const user = await Api.get(USERS_URL, { id })
 
     if (!user) {
         return res.status(NOT_FOUND).json({ error: 'User not found' })
