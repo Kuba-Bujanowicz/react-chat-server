@@ -17,16 +17,12 @@ const signup = async (req: Request, res: Response) => {
     }
 
     //Check if user already exist in database
-    try {
-        const userResponse = await Api.get(USERS_URL, { email: user.email })
-        if (userResponse) {
-            return res.status(CONFLICT).json({ errors: { email: 'This email already exists' } })
-        }
-        user.id = uuidv4()
-        await Api.post(USERS_URL, user);
-    } catch (err) {
-
+    const userResponse = await Api.get(USERS_URL, { email: user.email })
+    if (userResponse) {
+        return res.status(CONFLICT).json({ errors: { email: 'This email already exists' } })
     }
+    user.id = uuidv4()
+    await Api.post(USERS_URL, user);
 
     return res.json("Signed Up")
 }
