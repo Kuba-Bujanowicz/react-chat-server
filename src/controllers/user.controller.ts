@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { Api } from "../common/base/Api";
-import { BAD_REQUEST, CONFLICT } from "../common/const/codes";
+import { BAD_REQUEST, CONFLICT, NOT_FOUND } from "../common/const/codes";
 import { USERS_URL } from "../common/const/urls";
 import { User } from "../models/User";
 import { Validator } from "../common/base/Validator";
@@ -32,8 +32,28 @@ const signup = async (req: Request, res: Response) => {
     return res.json(token)
 }
 // Sign In
-const signin = (req: Request, res: Response) => {
-    res.json("Signed In")
+const signin = async (req: Request, res: Response) => {
+    const email: string = req.body.email;
+    const errors = { email: Validator.validateEmail(email) }
+
+    // Check if there any errors
+    if (Object.values(errors).filter(err => err).length) {
+        return res.status(BAD_REQUEST).json(errors)
+    }
+
+    //Check if user already exist in database
+    const user: User = await Api.get(USERS_URL, { email })
+    if (!user) {
+        return res.status(NOT_FOUND).json({ email: 'User not found' })
+    }
+
+    user.isActive = true;
+    await Api.put(USERS_URL, user, user.id);
+
+    //Generate jwt token
+    const token = Auth.generateToken(user.id)
+
+    return res.json(token)
 }
 
 const getUsers = async (req: Request, res: Response) => {
