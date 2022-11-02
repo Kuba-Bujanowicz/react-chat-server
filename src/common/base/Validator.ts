@@ -1,5 +1,5 @@
-import { User } from "../models/User";
-import { UserErrors } from "../models/UserErrors";
+import { User } from "../../models/User";
+import { UserErrors } from "../../models/UserErrors";
 
 export class Validator {
     private static initErrors<T>() {
