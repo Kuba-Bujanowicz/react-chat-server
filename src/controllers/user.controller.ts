@@ -36,8 +36,9 @@ const signin = (req: Request, res: Response) => {
     res.json("Signed In")
 }
 
-const getUsers = (req: Request, res: Response) => {
-    res.json('Success')
+const getUsers = async (req: Request, res: Response) => {
+    const users = await Api.get(USERS_URL)
+    res.json(users)
 }
 
 // Logout
