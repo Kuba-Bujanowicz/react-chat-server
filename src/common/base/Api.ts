@@ -4,8 +4,8 @@ import { RequestParams } from '../models/RequestParams';
 export class Api {
     private static baseUrl = 'http://localhost:3001'
 
-    private static getUrl(url: string) {
-        return this.baseUrl + url;
+    private static getUrl(url: string, id?: string | number) {
+        return id ? this.baseUrl + url + `/${id}` : this.baseUrl + url;
     }
 
     private static responseHandler(response: AxiosResponse) {
@@ -22,4 +22,10 @@ export class Api {
         return this.responseHandler(response)
     }
 
+    static async put(url: string, data: any, id: string | number) {
+        const response = await Axios.put(this.getUrl(url, id), data)
+        console.log('put');
+
+        return this.responseHandler(response)
+    }
 }
