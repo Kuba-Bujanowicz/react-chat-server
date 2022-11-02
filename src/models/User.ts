@@ -3,5 +3,4 @@ export interface User {
     name: string,
     email: string,
     isActive: boolean,
-    token: null | string
 }
