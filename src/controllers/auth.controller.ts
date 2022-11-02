@@ -66,7 +66,7 @@ const logout = (req: Request, res: Response) => {
     res.json("Logout")
 }
 
-export const UserController = {
+export const AuthController = {
     signup,
     signin,
     getUsers,

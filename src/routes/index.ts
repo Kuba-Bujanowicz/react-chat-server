@@ -1,5 +1,5 @@
-import { router as userRouter } from "./user.routes";
+import { router as authRouter } from "./auth.routes";
 
 export const Routes = {
-    UserRoutes: userRouter
+    AuthRoutes: authRouter
 }
