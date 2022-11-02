@@ -56,11 +56,6 @@ const signin = async (req: Request, res: Response) => {
     return res.json(token)
 }
 
-const getUsers = async (req: Request, res: Response) => {
-    const users = await Api.get(USERS_URL)
-    res.json(users)
-}
-
 // Logout
 const logout = (req: Request, res: Response) => {
     res.json("Logout")
@@ -69,6 +64,5 @@ const logout = (req: Request, res: Response) => {
 export const AuthController = {
     signup,
     signin,
-    getUsers,
     logout
 }

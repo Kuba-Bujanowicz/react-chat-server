@@ -14,7 +14,8 @@ app.use(express.json())
 app.use(cors())
 
 // Routes
-app.use('/', Routes.AuthRoutes)
+app.use('/', Routes.AuthRoutes);
+app.use('/', Routes.UserRoutes);
 
 const httpServer = createServer(app);
 
