@@ -10,6 +10,7 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
 
     try {
         Auth.verifyToken(token);
+        req.cookies.token = token;
         next()
     } catch (error) {
         return res.status(FORBIDDEN).json('Invalid authorization token')
