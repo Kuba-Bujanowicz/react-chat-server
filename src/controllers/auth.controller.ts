@@ -6,6 +6,7 @@ import { User } from "../models/User";
 import { Validator } from "../common/base/Validator";
 import { v4 as uuidv4 } from 'uuid'
 import { Auth } from "../common/base/Auth";
+import { JwtPayload } from "jsonwebtoken";
 
 // Sign Up
 const signup = async (req: Request, res: Response) => {
@@ -70,28 +71,31 @@ const signin = async (req: Request, res: Response) => {
 
 // Logout
 const logout = async (req: Request, res: Response) => {
-    const email = req.body.email;
-   
+    const token: string = req.cookies.token;
+    const decodedToken = Auth.decodeToken(token) as JwtPayload;
+
+
     //Change user isActive to false
     try {
-        const user: User = await Api.get(USERS_URL, {email})
+        const user: User = await Api.get(USERS_URL, { id: decodedToken.id })
         user.isActive = false;
         await Api.put(USERS_URL, user, user.id)
         res.clearCookie('token');
     } catch {
         return res.status(BAD_REQUEST).json('Cannot logout')
     }
-    
+
     return res.status(OK).json('Logout success');
 }
 
 // Delete account
 const deleteAccount = async (req: Request, res: Response) => {
-    const email = req.body.email;
-    
+    const token: string = req.cookies.token;
+    const decodedToken = Auth.decodeToken(token) as JwtPayload;
+
     //Delete a user
     try {
-        await Api.delete(USERS_URL, { email })
+        await Api.delete(USERS_URL, { id: decodedToken.id })
         res.clearCookie('token');
     } catch {
         return res.status(BAD_REQUEST).json('Cannot delete user')
