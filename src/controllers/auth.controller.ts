@@ -57,9 +57,19 @@ const signin = async (req: Request, res: Response) => {
 }
 
 // Logout
-const logout = (req: Request, res: Response) => {
+const logout = async (req: Request, res: Response) => {
+    const email = req.body.email;
+   
+    //Change user isActive to false
+    try {
+        const user: User = await Api.get(USERS_URL, {email})
+        user.isActive = false;
+        await Api.put(USERS_URL, user, user.id)
+    } catch {
+        return res.status(BAD_REQUEST).json('Cannot logout')
+    }
 
-    res.json("Logout")
+    return res.status(OK).json('Logout success');
 }
 
 // Delete account
