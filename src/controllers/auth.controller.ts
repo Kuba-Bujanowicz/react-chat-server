@@ -77,7 +77,7 @@ const logout = async (req: Request, res: Response) => {
 
     //Change user isActive to false
     try {
-        const user: User = await Api.get(USERS_URL, { id: decodedToken.id })
+        const user: User = await Api.get(USERS_URL, { id: decodedToken.data })
         user.isActive = false;
         await Api.put(USERS_URL, user, user.id)
         res.clearCookie('token');
@@ -95,7 +95,7 @@ const deleteAccount = async (req: Request, res: Response) => {
 
     //Delete a user
     try {
-        await Api.delete(USERS_URL, decodedToken.id)
+        await Api.delete(USERS_URL, decodedToken.data)
         res.clearCookie('token');
     } catch {
         return res.status(BAD_REQUEST).json('Cannot delete user')

@@ -21,7 +21,7 @@ const getUsers = async (req: Request, res: Response) => {
 const getCurrentUser = async (req: Request, res: Response) => {
     const token: string = req.cookies.token;
     const decodedToken = Auth.decodeToken(token) as JwtPayload
-    const user = await Api.get(USERS_URL, { id: decodedToken.id })
+    const user = await Api.get(USERS_URL, { id: decodedToken.data })
 
     if (!user) {
         return res.status(NOT_FOUND).json({ error: 'User not found' })
