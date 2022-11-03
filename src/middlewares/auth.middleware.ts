@@ -3,14 +3,12 @@ import { Auth } from "../common/base/Auth";
 import { FORBIDDEN, UNAUTHORIZED } from "../common/const/codes";
 
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader?.split(' ')[1];
+    const token: string = req.cookies.token;
 
     if (!token) return res.status(UNAUTHORIZED).json('Missing authorization token');
 
     try {
         Auth.verifyToken(token);
-        req.cookies.token = token;
         next()
     } catch (error) {
         return res.status(FORBIDDEN).json('Invalid authorization token')
