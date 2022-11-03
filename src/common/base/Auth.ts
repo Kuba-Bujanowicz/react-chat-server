@@ -8,4 +8,8 @@ export class Auth {
     static verifyToken(token: string) {
         return jwt.verify(token, process.env.TOKEN_SECRET as string)
     }
+
+    static decodeToken(token: string) {
+        return jwt.decode(token);
+    }
 }
