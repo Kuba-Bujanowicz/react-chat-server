@@ -5,6 +5,6 @@ import { AuthMiddleware } from "../middlewares/auth.middleware";
 const router = Router();
 
 router.get('/users', AuthMiddleware.authenticateToken, UserController.getUsers)
-router.get('/user', AuthMiddleware.authenticateToken, UserController.getUser)
+router.get('*', AuthMiddleware.authenticateToken, UserController.getCurrentUser)
 
 export { router }
