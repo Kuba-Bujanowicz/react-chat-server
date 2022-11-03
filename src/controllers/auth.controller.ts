@@ -95,7 +95,7 @@ const deleteAccount = async (req: Request, res: Response) => {
 
     //Delete a user
     try {
-        await Api.delete(USERS_URL, { id: decodedToken.id })
+        await Api.delete(USERS_URL, decodedToken.id)
         res.clearCookie('token');
     } catch {
         return res.status(BAD_REQUEST).json('Cannot delete user')
