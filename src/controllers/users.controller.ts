@@ -1,5 +1,7 @@
 import { Request, Response } from "express"
+import { JwtPayload } from "jsonwebtoken"
 import { Api } from "../common/base/Api"
+import { Auth } from "../common/base/Auth"
 import { NOT_FOUND, OK } from "../common/const/codes"
 import { USERS_URL } from "../common/const/urls"
 import { User } from "../models/User"
@@ -15,11 +17,11 @@ const getUsers = async (req: Request, res: Response) => {
     res.status(OK).json(usersPublic)
 }
 
-//Get specific user
-const getUser = async (req: Request, res: Response) => {
-    const email = req.body.email || '-';
-
-    const user = await Api.get(USERS_URL, { email })
+//Get current user
+const getCurrentUser = async (req: Request, res: Response) => {
+    const token: string = req.cookies.token;
+    const decodedToken = Auth.decodeToken(token) as JwtPayload
+    const user = await Api.get(USERS_URL, { id: decodedToken.id })
 
     if (!user) {
         return res.status(NOT_FOUND).json({ error: 'User not found' })
@@ -30,5 +32,5 @@ const getUser = async (req: Request, res: Response) => {
 
 export const UserController = {
     getUsers,
-    getUser
+    getCurrentUser
 }
