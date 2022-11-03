@@ -77,20 +77,22 @@ const logout = async (req: Request, res: Response) => {
         const user: User = await Api.get(USERS_URL, {email})
         user.isActive = false;
         await Api.put(USERS_URL, user, user.id)
+        res.clearCookie('token');
     } catch {
         return res.status(BAD_REQUEST).json('Cannot logout')
     }
-
+    
     return res.status(OK).json('Logout success');
 }
 
 // Delete account
 const deleteAccount = async (req: Request, res: Response) => {
     const email = req.body.email;
-
+    
     //Delete a user
     try {
         await Api.delete(USERS_URL, { email })
+        res.clearCookie('token');
     } catch {
         return res.status(BAD_REQUEST).json('Cannot delete user')
     }
