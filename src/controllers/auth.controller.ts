@@ -27,9 +27,15 @@ const signup = async (req: Request, res: Response) => {
     await Api.post(USERS_URL, user);
 
     //Generate jwt token
-    const token = Auth.generateToken(user.id)
+    const token = Auth.generateToken(user.id);
 
-    return res.json(token)
+    res.cookie('token', token, {
+        httpOnly: true,
+        maxAge: 3_600_000,
+        sameSite: "strict"
+    });
+
+    return res.json('User signed up')
 }
 // Sign In
 const signin = async (req: Request, res: Response) => {
@@ -53,7 +59,13 @@ const signin = async (req: Request, res: Response) => {
     //Generate jwt token
     const token = Auth.generateToken(user.id)
 
-    return res.json(token)
+    res.cookie('token', token, {
+        httpOnly: true,
+        maxAge: 3_600_000,
+        sameSite: "strict"
+    });
+
+    return res.json('User signed in')
 }
 
 // Logout
