@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Api } from '../common/base/Api';
-import { BAD_REQUEST, CONFLICT, NOT_FOUND, OK } from '../common/const/codes';
+import { BAD_REQUEST, CONFLICT, NOT_FOUND, OK, PERMANENT_REDIRECT } from '../common/const/codes';
 import { USERS_URL } from '../common/const/urls';
 import { User } from '../models/User';
 import { Validator } from '../common/base/Validator';
@@ -84,7 +84,7 @@ const logout = async (req: Request, res: Response) => {
     return res.status(BAD_REQUEST).json('Cannot logout');
   }
 
-  return res.status(OK).json('Logout success');
+  return res.status(PERMANENT_REDIRECT).redirect('/signin');
 };
 
 // Delete account
