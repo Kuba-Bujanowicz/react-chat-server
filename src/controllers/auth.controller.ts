@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Api } from '../common/base/Api';
-import { BAD_REQUEST, CONFLICT, NOT_FOUND, OK, PERMANENT_REDIRECT } from '../common/const/codes';
+import { BAD_REQUEST, CONFLICT, FORBIDDEN, NOT_FOUND, OK, PERMANENT_REDIRECT, UNAUTHORIZED } from '../common/const/codes';
 import { USERS_URL } from '../common/const/urls';
 import { User } from '../models/User';
 import { Validator } from '../common/base/Validator';
@@ -103,9 +103,24 @@ const deleteAccount = async (req: Request, res: Response) => {
   return res.status(OK).json('User deleted successfully');
 };
 
+// Authenticate token
+const authenticateToken = async (req: Request, res: Response) => {
+  const token: string = req.cookies.token;
+
+  if (!token) return res.status(UNAUTHORIZED).json('Missing authorization token');
+
+  try {
+    Auth.verifyToken(token);
+    return res.status(OK).json('Token authenticated');
+  } catch (error) {
+    return res.status(FORBIDDEN).json('Invalid authorization token');
+  }
+};
+
 export const AuthController = {
   signup,
   signin,
   logout,
   deleteAccount,
+  authenticateToken,
 };

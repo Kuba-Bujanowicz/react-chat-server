@@ -1,12 +1,13 @@
-import { Router } from "express";
-import { AuthController } from "../controllers/auth.controller";
-import { AuthMiddleware } from "../middlewares/auth.middleware";
+import { Router } from 'express';
+import { AuthController } from '../controllers/auth.controller';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
 
-const router = Router()
+const router = Router();
 
-router.post('/signup', AuthController.signup)
-router.post('/signin', AuthController.signin)
-router.post('/logout', AuthMiddleware.authenticateToken, AuthController.logout)
-router.delete('/deleteAccount', AuthMiddleware.authenticateToken, AuthController.deleteAccount)
+router.post('/signup', AuthController.signup);
+router.post('/signin', AuthController.signin);
+router.post('/logout', AuthMiddleware.authenticateToken, AuthController.logout);
+router.delete('/deleteAccount', AuthMiddleware.authenticateToken, AuthController.deleteAccount);
+router.post('/authToken', AuthController.authenticateToken);
 
-export { router }
+export { router };
