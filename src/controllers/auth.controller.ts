@@ -34,6 +34,7 @@ const signup = async (req: Request, res: Response) => {
     httpOnly: true,
     maxAge: 3_600_000,
     sameSite: 'strict',
+    secure: true,
   });
 
   res.status(OK).send('User signed up');
@@ -64,6 +65,7 @@ const signin = async (req: Request, res: Response) => {
     httpOnly: true,
     maxAge: 3_600_000,
     sameSite: 'strict',
+    secure: true,
   });
 
   res.status(OK).send('User signed in');
