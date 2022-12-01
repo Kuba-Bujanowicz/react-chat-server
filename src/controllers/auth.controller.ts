@@ -86,7 +86,7 @@ const logout = async (req: Request, res: Response) => {
     return res.status(BAD_REQUEST).json('Cannot logout');
   }
 
-  return res.status(PERMANENT_REDIRECT).redirect('/signin');
+  return res.status(OK).send('User logout');
 };
 
 // Delete account
