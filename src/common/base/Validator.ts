@@ -21,8 +21,8 @@ export class Validator {
     }
   }
 
-  static isEmpty(text: string, fieldName?: string) {
-    if (!text || text.trim() === '') {
+  static isEmpty(text: string | number, fieldName?: string) {
+    if (!text || String(text).trim() === '') {
       return `${fieldName || 'Field'} is required`;
     }
   }
