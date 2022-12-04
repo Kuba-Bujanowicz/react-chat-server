@@ -1,6 +1,6 @@
-export interface SignUpUser {
+export interface FormUser {
   email: string;
-  name: string;
   password: string;
+  name?: string;
   passowrdConfirm: string;
 }
