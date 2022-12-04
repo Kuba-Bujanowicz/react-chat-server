@@ -7,11 +7,16 @@ import { Validator } from '../common/base/Validator';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth } from '../common/base/Auth';
 import { JwtPayload } from 'jsonwebtoken';
+import { SignUpUser } from '../models/SignUpUser';
+import { Password } from '../common/base/Password';
 
 // Sign Up
 const signup = async (req: Request, res: Response) => {
-  const user: User = req.body;
-  const errors = Validator.validateUser(user);
+  // Get user from request
+  const user: SignUpUser = req.body;
+
+  // Validate user's credentials
+  const errors = Validator.validateSignUpUser(user);
 
   // Check if there any errors
   if (Object.values(errors).filter((err) => err).length) {
@@ -19,16 +24,29 @@ const signup = async (req: Request, res: Response) => {
   }
 
   //Check if user already exist in database
-  const userResponse = await Api.get(USERS_URL, { email: user.email });
-  if (userResponse) {
+  const userEmailResponse = await Api.get(USERS_URL, { email: user.email });
+  const userNameResponse = await Api.get(USERS_URL, { name: user.name });
+
+  if (userEmailResponse) {
     return res.status(CONFLICT).json({ email: 'This email already exists' });
   }
-  user.id = uuidv4();
-  user.isActive = true;
-  await Api.post(USERS_URL, user);
+
+  if (userNameResponse) {
+    return res.status(CONFLICT).json({ name: 'This name already exists' });
+  }
+
+  // Create new user
+  const newUser: User = {
+    id: uuidv4(),
+    email: user.email,
+    name: user.name,
+    password: await Password.hashPassword(user.password),
+  };
+
+  await Api.post(USERS_URL, newUser);
 
   //Generate jwt token
-  const token = Auth.generateToken(user.id);
+  const token = Auth.generateToken(newUser.id);
 
   res.cookie('token', token, {
     httpOnly: true,
