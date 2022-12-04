@@ -26,10 +26,18 @@ export class Validator {
     }
   }
 
+  static isSamePasswords(password: string, passwordConfirm: string) {
+    if (password !== passwordConfirm) {
+      return 'Passwords must match';
+    }
+  }
+
   static validateSignUpUser(user: SignUpUser): UserErrors {
     const errors = this.initErrors<UserErrors>();
 
     errors.email = this.isEmail(user.email);
+    errors.password = this.isEmpty(user.password);
+    errors.passwordConfirm = this.isSamePasswords(user.password, user.passwordConfirm);
     errors.name = this.isEmpty(user.name, 'Name');
 
     return errors;
