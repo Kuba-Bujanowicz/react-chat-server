@@ -27,15 +27,9 @@ export class Validator {
     }
   }
 
-  static isSamePasswords(password: string, passwordConfirm: string) {
+  static isSamePasswords(password: string | number, passwordConfirm: string | number) {
     if (password !== passwordConfirm) {
       return 'Passwords must match';
-    }
-  }
-
-  static isValid(text: any) {
-    if (text && typeof text !== 'string') {
-      return 'Invalid value';
     }
   }
 
@@ -44,7 +38,6 @@ export class Validator {
 
     errors.email = this.isEmail(user.email);
     errors.password = this.isEmpty(user.password);
-    errors.password = this.isValid(user.password);
     errors.passwordConfirm = this.isSamePasswords(user.password, user.passwordConfirm);
     errors.name = this.isEmpty(user.name, 'Name');
 
