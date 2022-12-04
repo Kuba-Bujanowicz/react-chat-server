@@ -1,4 +1,4 @@
-import { User } from '../../models/User';
+import { FormUser } from '../../models/SignUpUser';
 import { UserErrors } from '../../models/UserErrors';
 
 export class Validator {
@@ -26,7 +26,7 @@ export class Validator {
     }
   }
 
-  static validateUser(user: User): UserErrors {
+  static validateUser(user: FormUser): UserErrors {
     const errors = this.initErrors<UserErrors>();
 
     errors.email = this.validateEmail(user.email);
