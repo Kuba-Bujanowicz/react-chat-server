@@ -22,7 +22,7 @@ export class Validator {
   }
 
   static isEmpty(text: any, fieldName?: string) {
-    if (typeof text !== 'string') {
+    if (text && typeof text !== 'string') {
       return 'Invalid value';
     }
 
