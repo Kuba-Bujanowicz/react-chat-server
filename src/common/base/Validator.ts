@@ -21,11 +21,7 @@ export class Validator {
     }
   }
 
-  static isEmpty(text: any, fieldName?: string) {
-    if (text && typeof text !== 'string') {
-      return 'Invalid value';
-    }
-
+  static isEmpty(text: string, fieldName?: string) {
     if (!text || text.trim() === '') {
       return `${fieldName || 'Field'} is required`;
     }
@@ -37,11 +33,18 @@ export class Validator {
     }
   }
 
+  static isValid(text: any) {
+    if (text && typeof text !== 'string') {
+      return 'Invalid value';
+    }
+  }
+
   static validateSignUpUser(user: SignUpUser): UserErrors {
     const errors = this.initErrors<UserErrors>();
 
     errors.email = this.isEmail(user.email);
     errors.password = this.isEmpty(user.password);
+    errors.password = this.isValid(user.password);
     errors.passwordConfirm = this.isSamePasswords(user.password, user.passwordConfirm);
     errors.name = this.isEmpty(user.name, 'Name');
 
