@@ -22,8 +22,8 @@ const signup = async (req: Request, res: Response) => {
   }
 
   //Check if user already exist in database
-  const userEmailResponse = await Api.get(USERS_URL, { email: user.email });
-  const userNameResponse = await Api.get(USERS_URL, { name: user.name });
+  const userEmailResponse: User | undefined = await Api.get(USERS_URL, { email: user.email });
+  const userNameResponse: User | undefined = await Api.get(USERS_URL, { name: user.name });
 
   if (userEmailResponse) {
     return res.status(CONFLICT).json({ email: 'This email already exists' });
@@ -66,8 +66,8 @@ const signin = async (req: Request, res: Response) => {
   }
 
   //Check if user already exist in database and verify password
-  const userResponse: User = await Api.get(USERS_URL, { email: user.email });
-  const match = await bcrypt.compare(String(user.password), userResponse.passwordHash);
+  const userResponse: User | undefined = await Api.get(USERS_URL, { email: user.email });
+  const match = await bcrypt.compare(String(user.password), userResponse?.passwordHash || '');
 
   if (!userResponse || !match) {
     return res.status(BAD_REQUEST).json({ errorMessage: 'Wrong email or password' });
