@@ -1,5 +1,5 @@
-import { SignInUser } from '../../models/SignInUser';
-import { SignUpUser } from '../../models/SignUpUser';
+import { UserSignIn } from '../../models/UserSignIn';
+import { UserSignUp } from '../../models/UserSignUp';
 import { UserErrors } from '../../models/UserErrors';
 
 export class Validator {
@@ -33,7 +33,7 @@ export class Validator {
     }
   }
 
-  static validateSignUpUser(user: SignUpUser): UserErrors {
+  static validateUserSignUp(user: UserSignUp): UserErrors {
     const errors = this.initErrors<UserErrors>();
 
     errors.email = this.isEmail(user.email);
@@ -44,7 +44,7 @@ export class Validator {
     return errors;
   }
 
-  static validateSignInUser(user: SignInUser): UserErrors {
+  static validateUserSignIn(user: UserSignIn): UserErrors {
     const errors = this.initErrors<UserErrors>();
 
     errors.email = this.isEmail(user.email);

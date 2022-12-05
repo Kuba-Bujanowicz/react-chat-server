@@ -8,13 +8,13 @@ import { Validator } from '../common/base/Validator';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth } from '../common/base/Auth';
 import { JwtPayload } from 'jsonwebtoken';
-import { SignUpUser } from '../models/SignUpUser';
-import { SignInUser } from '../models/SignInUser';
+import { UserSignUp } from '../models/UserSignUp';
+import { UserSignIn } from '../models/UserSignIn';
 
 // Sign Up
 const signup = async (req: Request, res: Response) => {
-  const user: SignUpUser = req.body;
-  const errors = Validator.validateSignUpUser(user);
+  const user: UserSignUp = req.body;
+  const errors = Validator.validateUserSignUp(user);
 
   // Check if there any errors
   if (Object.values(errors).filter((err) => err).length) {
@@ -57,8 +57,8 @@ const signup = async (req: Request, res: Response) => {
 };
 // Sign In
 const signin = async (req: Request, res: Response) => {
-  const user: SignInUser = req.body;
-  const errors = Validator.validateSignInUser(user);
+  const user: UserSignIn = req.body;
+  const errors = Validator.validateUserSignIn(user);
 
   // Check if there any errors
   if (Object.values(errors).filter((err) => err).length) {
