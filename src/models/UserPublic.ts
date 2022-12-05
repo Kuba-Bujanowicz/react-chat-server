@@ -1,5 +1,4 @@
 export interface UserPublic {
-    id: string,
-    name: string,
-    isActive: boolean,
+  id: string;
+  name: string;
 }
