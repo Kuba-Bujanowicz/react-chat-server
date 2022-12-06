@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { Api } from '../common/base/Api';
-import { BAD_REQUEST, CONFLICT, FORBIDDEN, OK, UNAUTHORIZED } from '../common/const/codes';
+import { BAD_REQUEST, CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED } from '../common/const/codes';
 import { USERS_URL } from '../common/const/urls';
 import { User } from '../models/User';
 import { Validator } from '../common/base/Validator';
@@ -10,6 +10,7 @@ import { Auth } from '../common/base/Auth';
 import { JwtPayload } from 'jsonwebtoken';
 import { UserSignUp } from '../models/UserSignUp';
 import { UserSignIn } from '../models/UserSignIn';
+import { Email } from '../common/base/Email';
 
 // Sign Up
 const signup = async (req: Request, res: Response) => {
@@ -41,19 +42,21 @@ const signup = async (req: Request, res: Response) => {
     passwordHash: await bcrypt.hash(String(user.password), 10),
   };
 
+  // Sent verification link
+  const emailToken = Auth.generateToken(user.email);
+  const html = `<p>Click the link below to verify your email</br>\n<a href="http://localhost:4000/verifyEmail/${newUser.id}/${emailToken}">Click here</a></p>`;
+  try {
+    await Email.send(user.email, 'Verify your email', html);
+  } catch (error) {
+    console.log(error);
+
+    return res.status(INTERNAL_SERVER_ERROR).send('Email not sent');
+  }
+
+  // Creating user in database
   await Api.post(USERS_URL, newUser);
 
-  //Generate jwt token
-  const token = Auth.generateToken(newUser.id);
-
-  res.cookie('token', token, {
-    httpOnly: true,
-    maxAge: 3_600_000,
-    sameSite: 'strict',
-    secure: true,
-  });
-
-  res.status(OK).send('User signed up');
+  return res.status(OK).send('Email sent');
 };
 // Sign In
 const signin = async (req: Request, res: Response) => {
@@ -123,10 +126,35 @@ const authenticateToken = async (req: Request, res: Response) => {
   }
 };
 
+// Verify email link with token
+const verifyEmail = async (req: Request, res: Response) => {
+  const { id, token } = req.params;
+
+  console.log(id, token);
+  const user = await Api.get(USERS_URL, { id });
+  console.log(user);
+
+  if (!user) {
+    return res.status(BAD_REQUEST).send('User not found');
+  }
+
+  if (!token) {
+    return res.status(BAD_REQUEST).send('Missing token');
+  }
+
+  try {
+    Auth.verifyToken(token);
+    return res.status(OK).redirect('http://localhost:3000/emailVerified');
+  } catch (error) {
+    return res.status(FORBIDDEN).json('Invalid authorization token');
+  }
+};
+
 export const AuthController = {
   signup,
   signin,
   logout,
   deleteAccount,
   authenticateToken,
+  verifyEmail,
 };
