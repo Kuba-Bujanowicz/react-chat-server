@@ -5,15 +5,17 @@ import { Auth } from '../common/base/Auth';
 import { NOT_FOUND, OK } from '../common/const/codes';
 import { USERS_URL } from '../common/const/urls';
 import { User } from '../types/User';
-import { UserPublic } from '../types/UserPublic';
+import { MyUser, UserPublic } from '../types/UserPublic';
 import UserModel from '../models/User';
 
 //Get all users
 const getUsers = async (req: Request, res: Response) => {
   const users: User[] = await UserModel.find({});
   const usersPublic: UserPublic[] = users.map((user) => {
-    const { email, name } = user;
-    return { email, name };
+    return {
+      name: user.name,
+      email: user.email,
+    };
   });
   res.status(OK).json(usersPublic);
 };
@@ -28,12 +30,13 @@ const getCurrentUser = async (req: Request, res: Response) => {
     return res.status(NOT_FOUND).send('User not found');
   }
 
-  const userPublic: UserPublic = {
+  const myUser: MyUser = {
     name: user.name,
     email: user.email,
+    isVerified: user.isVerified,
   };
 
-  res.status(OK).json(userPublic);
+  res.status(OK).json(myUser);
 };
 
 export const UserController = {

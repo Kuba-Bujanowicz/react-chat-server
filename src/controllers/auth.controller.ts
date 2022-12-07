@@ -38,6 +38,7 @@ const signup = async (req: Request, res: Response) => {
     _id: uuidv4(),
     email: user.email,
     name: String(user.name),
+    isVerified: false,
     passwordHash: await bcrypt.hash(String(user.password), 10),
   });
 
@@ -77,6 +78,11 @@ const signin = async (req: Request, res: Response) => {
 
   if (!userResponse || !match) {
     return res.status(BAD_REQUEST).send('Wrong email or password');
+  }
+
+  //Check if user is active
+  if (!userResponse.isVerified) {
+    return res.status(FORBIDDEN).send('User is not active yet. Please verify your email');
   }
 
   //Generate jwt token
@@ -145,6 +151,7 @@ const verifyEmail = async (req: Request, res: Response) => {
 
   try {
     Auth.verifyToken(token);
+    await UserModel.findByIdAndUpdate(id, { isVerified: true });
     return res.status(OK).redirect('http://localhost:3000/emailVerified');
   } catch (error) {
     return res.status(FORBIDDEN).send('Invalid authorization token');
