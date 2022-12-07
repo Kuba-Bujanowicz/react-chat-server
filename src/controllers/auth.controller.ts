@@ -1,16 +1,15 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { Api } from '../common/base/Api';
 import { BAD_REQUEST, CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED } from '../common/const/codes';
-import { USERS_URL } from '../common/const/urls';
-import { User } from '../models/User';
+import { User } from '../types/User';
 import { Validator } from '../common/base/Validator';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth } from '../common/base/Auth';
 import { JwtPayload } from 'jsonwebtoken';
-import { UserSignUp } from '../models/UserSignUp';
-import { UserSignIn } from '../models/UserSignIn';
+import { UserSignUp } from '../types/UserSignUp';
+import { UserSignIn } from '../types/UserSignIn';
 import { Email } from '../common/base/Email';
+import UserModel from '../models/User';
 
 // Sign Up
 const signup = async (req: Request, res: Response) => {
@@ -23,8 +22,8 @@ const signup = async (req: Request, res: Response) => {
   }
 
   //Check if user already exist in database
-  const userEmailResponse: User | undefined = await Api.get(USERS_URL, { email: user.email });
-  const userNameResponse: User | undefined = await Api.get(USERS_URL, { name: user.name });
+  const userEmailResponse = await UserModel.findOne({ email: user.email });
+  const userNameResponse = await UserModel.findOne({ name: user.name });
 
   if (userEmailResponse) {
     return res.status(CONFLICT).json({ email: 'This email already exists' });
@@ -34,27 +33,31 @@ const signup = async (req: Request, res: Response) => {
     return res.status(CONFLICT).json({ name: 'This name already exists' });
   }
 
-  // Create new user
-  const newUser: User = {
-    id: uuidv4(),
+  // Creating user in database
+  const newUser = new UserModel<User>({
+    _id: uuidv4(),
     email: user.email,
     name: String(user.name),
     passwordHash: await bcrypt.hash(String(user.password), 10),
-  };
+  });
+
+  const createdUser = await newUser.save();
+  console.log(createdUser);
+
+  if (newUser !== createdUser) {
+    return res.status(INTERNAL_SERVER_ERROR).send('Cannot create user');
+  }
 
   // Sent verification link
-  const emailToken = Auth.generateToken(user.email);
+  const emailToken = Auth.generateToken(newUser.email);
   const html = `<p>Click the link below to verify your email</br>\n<a href="http://localhost:4000/verifyEmail/${newUser.id}/${emailToken}">Click here</a></p>`;
   try {
-    await Email.send(user.email, 'Verify your email', html);
+    await Email.send(newUser.email, 'Verify your email', html);
   } catch (error) {
     console.log(error);
 
     return res.status(INTERNAL_SERVER_ERROR).send('Email not sent');
   }
-
-  // Creating user in database
-  await Api.post(USERS_URL, newUser);
 
   return res.status(OK).send('Email sent');
 };
@@ -69,7 +72,7 @@ const signin = async (req: Request, res: Response) => {
   }
 
   //Check if user already exist in database and verify password
-  const userResponse: User | undefined = await Api.get(USERS_URL, { email: user.email });
+  const userResponse: User | null = await UserModel.findOne({ email: user.email });
   const match = await bcrypt.compare(String(user.password), userResponse?.passwordHash || '');
 
   if (!userResponse || !match) {
@@ -77,13 +80,13 @@ const signin = async (req: Request, res: Response) => {
   }
 
   //Generate jwt token
-  const token = Auth.generateToken(userResponse.id);
+  const token = Auth.generateToken(userResponse._id);
 
+  res.clearCookie('token');
   res.cookie('token', token, {
     httpOnly: true,
     maxAge: 3_600_000,
     sameSite: 'strict',
-    secure: true,
   });
 
   res.status(OK).send('User signed in');
@@ -103,7 +106,7 @@ const deleteAccount = async (req: Request, res: Response) => {
 
   //Delete a user
   try {
-    await Api.delete(USERS_URL, decodedToken.data);
+    await UserModel.deleteOne({ _id: decodedToken.data });
     res.clearCookie('token');
   } catch {
     return res.status(BAD_REQUEST).json('Cannot delete user');
@@ -130,9 +133,7 @@ const authenticateToken = async (req: Request, res: Response) => {
 const verifyEmail = async (req: Request, res: Response) => {
   const { id, token } = req.params;
 
-  console.log(id, token);
-  const user = await Api.get(USERS_URL, { id });
-  console.log(user);
+  const user = await UserModel.findById(id);
 
   if (!user) {
     return res.status(BAD_REQUEST).send('User not found');
