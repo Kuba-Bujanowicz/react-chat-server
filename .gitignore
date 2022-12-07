@@ -4,9 +4,6 @@
 # production
 /dist
 
-# development
-/src/database
-
 # misc
 .env
 npm-debug.log*
