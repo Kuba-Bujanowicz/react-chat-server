@@ -25,7 +25,7 @@ const getCurrentUser = async (req: Request, res: Response) => {
   const user: User | null = await UserModel.findById(decodedToken.data);
 
   if (!user) {
-    return res.status(NOT_FOUND).json({ error: 'User not found' });
+    return res.status(NOT_FOUND).send('User not found');
   }
 
   const userPublic: UserPublic = {

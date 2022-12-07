@@ -4,15 +4,14 @@ import { FORBIDDEN, UNAUTHORIZED } from '../common/const/codes';
 
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const token: string = req.cookies.token;
-  console.log(req.cookies.token);
 
-  if (!token) return res.status(UNAUTHORIZED).json('Missing authorization token');
+  if (!token) return res.status(UNAUTHORIZED).send('Missing authorization token');
 
   try {
     Auth.verifyToken(token);
     next();
   } catch (error) {
-    return res.status(FORBIDDEN).json('Invalid authorization token');
+    return res.status(FORBIDDEN).send('Invalid authorization token');
   }
 };
 

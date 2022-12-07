@@ -76,7 +76,7 @@ const signin = async (req: Request, res: Response) => {
   const match = await bcrypt.compare(String(user.password), userResponse?.passwordHash || '');
 
   if (!userResponse || !match) {
-    return res.status(BAD_REQUEST).json({ errorMessage: 'Wrong email or password' });
+    return res.status(BAD_REQUEST).send('Wrong email or password');
   }
 
   //Generate jwt token
@@ -109,23 +109,23 @@ const deleteAccount = async (req: Request, res: Response) => {
     await UserModel.deleteOne({ _id: decodedToken.data });
     res.clearCookie('token');
   } catch {
-    return res.status(BAD_REQUEST).json('Cannot delete user');
+    return res.status(BAD_REQUEST).send('Cannot delete user');
   }
 
-  return res.status(OK).json('User deleted successfully');
+  return res.status(OK).send('User deleted successfully');
 };
 
 // Authenticate token
 const authenticateToken = async (req: Request, res: Response) => {
   const token: string = req.cookies.token;
 
-  if (!token) return res.status(UNAUTHORIZED).json('Missing authorization token');
+  if (!token) return res.status(UNAUTHORIZED).send('Missing authorization token');
 
   try {
     Auth.verifyToken(token);
-    return res.status(OK).json('Token authenticated');
+    return res.status(OK).send('Token authenticated');
   } catch (error) {
-    return res.status(FORBIDDEN).json('Invalid authorization token');
+    return res.status(FORBIDDEN).send('Invalid authorization token');
   }
 };
 
@@ -147,7 +147,7 @@ const verifyEmail = async (req: Request, res: Response) => {
     Auth.verifyToken(token);
     return res.status(OK).redirect('http://localhost:3000/emailVerified');
   } catch (error) {
-    return res.status(FORBIDDEN).json('Invalid authorization token');
+    return res.status(FORBIDDEN).send('Invalid authorization token');
   }
 };
 
