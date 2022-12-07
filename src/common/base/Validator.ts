@@ -1,6 +1,6 @@
-import { UserSignIn } from '../../models/UserSignIn';
-import { UserSignUp } from '../../models/UserSignUp';
-import { UserErrors } from '../../models/UserErrors';
+import { UserSignIn } from '../../types/UserSignIn';
+import { UserSignUp } from '../../types/UserSignUp';
+import { UserErrors } from '../../types/UserErrors';
 
 export class Validator {
   private static initErrors<T>() {
