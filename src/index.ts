@@ -4,7 +4,7 @@ import { createServer } from 'http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { Routes } from './routes';
-import './db/index';
+import './database/index';
 
 const port = process.env.PORT || 4000;
 const app: Express = express();
