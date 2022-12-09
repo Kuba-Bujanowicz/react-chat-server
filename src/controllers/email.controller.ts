@@ -44,7 +44,7 @@ const verifyEmail = async (req: Request, res: Response) => {
     Auth.verifyToken(token);
     await UserModel.findByIdAndUpdate(id, { isVerified: true });
   } catch (error) {
-    return res.status(FORBIDDEN).send('Invalid authorization token');
+    return res.status(FORBIDDEN).send('Invalid link');
   }
 
   return res.status(OK).redirect('http://localhost:3000/');
