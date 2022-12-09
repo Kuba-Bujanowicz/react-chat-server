@@ -5,6 +5,6 @@ import { AuthMiddleware } from '../middlewares/auth.middleware';
 const router = Router();
 
 router.post('/send-email', AuthMiddleware.authenticateToken, EmailController.sentLink);
-router.get('/verify-email/:id/:token', AuthMiddleware.authenticateToken, EmailController.verifyEmail);
+router.get('/verify-email/:id/:token', EmailController.verifyEmail);
 
 export { router };
