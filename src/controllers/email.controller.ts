@@ -45,7 +45,7 @@ const verifyEmail = async (req: Request, res: Response) => {
     return res.status(FORBIDDEN).send('Invalid link');
   }
 
-  return res.status(OK).redirect('http://localhost:3000/');
+  return res.status(OK).redirect('http://localhost:3000/verify-email/');
 };
 
 export const EmailController = {
