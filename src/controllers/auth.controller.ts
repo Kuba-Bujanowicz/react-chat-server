@@ -77,7 +77,7 @@ const signin = async (req: Request, res: Response) => {
     sameSite: 'strict',
   });
 
-  res.status(OK).json('User signed in');
+  res.status(OK).send('User signed in');
 };
 
 // Logout
