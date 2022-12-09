@@ -1,10 +1,11 @@
-import { Router } from "express";
-import { UserController } from "../controllers/users.controller";
-import { AuthMiddleware } from "../middlewares/auth.middleware";
+import { Router } from 'express';
+import { UserController } from '../controllers/users.controller';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
 
 const router = Router();
+const middlewares = [AuthMiddleware.authenticateToken, AuthMiddleware.authenticateEmail];
 
-router.get('/users', AuthMiddleware.authenticateToken, UserController.getUsers)
-router.get('/currentUser', AuthMiddleware.authenticateToken, UserController.getCurrentUser)
+router.get('/users', middlewares, UserController.getUsers);
+router.get('/currentUser', middlewares, UserController.getCurrentUser);
 
-export { router }
+export { router };
