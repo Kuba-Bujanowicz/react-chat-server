@@ -3,9 +3,8 @@ import { UserController } from '../controllers/users.controller';
 import { AuthMiddleware } from '../middlewares/auth.middleware';
 
 const router = Router();
-const middlewares = [AuthMiddleware.authenticateToken, AuthMiddleware.authenticateEmail];
 
-router.get('/users', middlewares, UserController.getUsers);
-router.get('/current-user', middlewares, UserController.getCurrentUser);
+router.get('/users', [AuthMiddleware.authenticateToken, AuthMiddleware.authenticateEmail], UserController.getUsers);
+router.get('/current-user', AuthMiddleware.authenticateToken, UserController.getCurrentUser);
 
 export { router };
