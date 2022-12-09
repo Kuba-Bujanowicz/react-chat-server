@@ -18,8 +18,6 @@ const sentLink = async (req: Request, res: Response) => {
   try {
     await Email.send(user.email, 'Verify your email', html);
   } catch (error) {
-    console.log(error);
-
     return res.status(INTERNAL_SERVER_ERROR).send('Email not sent');
   }
 
