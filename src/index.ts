@@ -19,8 +19,9 @@ app.use(
 );
 
 // Routes
-app.use('/', Routes.AuthRoutes);
-app.use('/', Routes.UserRoutes);
+app.use('/api/', Routes.AuthRoutes);
+app.use('/api/', Routes.UserRoutes);
+app.use('/api/', Routes.EmailRoutes);
 
 const httpServer = createServer(app);
 

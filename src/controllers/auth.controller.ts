@@ -8,7 +8,6 @@ import { Auth } from '../common/base/Auth';
 import { JwtPayload } from 'jsonwebtoken';
 import { UserSignUp } from '../types/UserSignUp';
 import { UserSignIn } from '../types/UserSignIn';
-import { Email } from '../common/base/Email';
 import UserModel from '../models/User';
 
 // Sign Up
@@ -48,18 +47,7 @@ const signup = async (req: Request, res: Response) => {
     return res.status(INTERNAL_SERVER_ERROR).send('Cannot create user');
   }
 
-  // Sent verification link
-  const emailToken = Auth.generateToken(newUser.email);
-  const html = `<p>Click the link below to verify your email</br>\n<a href="http://localhost:4000/verifyEmail/${newUser.id}/${emailToken}">Click here</a></p>`;
-  try {
-    await Email.send(newUser.email, 'Verify your email', html);
-  } catch (error) {
-    console.log(error);
-
-    return res.status(INTERNAL_SERVER_ERROR).send('Email not sent');
-  }
-
-  return res.status(OK).send('Email sent');
+  return res.status(OK).send('User signed up');
 };
 // Sign In
 const signin = async (req: Request, res: Response) => {
@@ -129,34 +117,10 @@ const authenticateToken = async (req: Request, res: Response) => {
   }
 };
 
-// Verify email link with token
-const verifyEmail = async (req: Request, res: Response) => {
-  const { id, token } = req.params;
-
-  const user = await UserModel.findById(id);
-
-  if (!user) {
-    return res.status(BAD_REQUEST).send('Invalid link');
-  }
-
-  if (!token) {
-    return res.status(BAD_REQUEST).send('Invalid link');
-  }
-
-  try {
-    Auth.verifyToken(token);
-    await UserModel.findByIdAndUpdate(id, { isVerified: true });
-    return res.status(OK).redirect('http://localhost:3000/');
-  } catch (error) {
-    return res.status(FORBIDDEN).send('Invalid authorization token');
-  }
-};
-
 export const AuthController = {
   signup,
   signin,
   logout,
   deleteAccount,
   authenticateToken,
-  verifyEmail,
 };
