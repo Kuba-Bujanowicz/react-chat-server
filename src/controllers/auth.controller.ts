@@ -9,6 +9,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import { UserSignUp } from '../types/UserSignUp';
 import { UserSignIn } from '../types/UserSignIn';
 import UserModel from '../models/User';
+import { MyUser } from '../types/UserPublic';
 
 // Sign Up
 const signup = async (req: Request, res: Response) => {
@@ -47,7 +48,13 @@ const signup = async (req: Request, res: Response) => {
     return res.status(INTERNAL_SERVER_ERROR).send('Cannot create user');
   }
 
-  return res.status(OK).send('User signed up');
+  const myUser: MyUser = {
+    email: createdUser.email,
+    name: createdUser.name,
+    isVerified: createdUser.isVerified,
+  };
+
+  return res.status(OK).send(myUser);
 };
 // Sign In
 const signin = async (req: Request, res: Response) => {
@@ -77,7 +84,13 @@ const signin = async (req: Request, res: Response) => {
     sameSite: 'strict',
   });
 
-  res.status(OK).send('User signed in');
+  const myUser: MyUser = {
+    email: userResponse.email,
+    name: userResponse.name,
+    isVerified: userResponse.isVerified,
+  };
+
+  res.status(OK).send(myUser);
 };
 
 // Logout
