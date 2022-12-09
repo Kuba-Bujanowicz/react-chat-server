@@ -43,7 +43,6 @@ const signup = async (req: Request, res: Response) => {
   });
 
   const createdUser = await newUser.save();
-  console.log(createdUser);
 
   if (newUser !== createdUser) {
     return res.status(INTERNAL_SERVER_ERROR).send('Cannot create user');
@@ -80,11 +79,6 @@ const signin = async (req: Request, res: Response) => {
     return res.status(BAD_REQUEST).send('Wrong email or password');
   }
 
-  //Check if user is active
-  if (!userResponse.isVerified) {
-    return res.status(FORBIDDEN).send('User is not active yet. Please verify your email');
-  }
-
   //Generate jwt token
   const token = Auth.generateToken(userResponse._id);
 
@@ -95,7 +89,7 @@ const signin = async (req: Request, res: Response) => {
     sameSite: 'strict',
   });
 
-  res.status(OK).send('User signed in');
+  res.status(OK).json('User signed in');
 };
 
 // Logout
@@ -142,17 +136,17 @@ const verifyEmail = async (req: Request, res: Response) => {
   const user = await UserModel.findById(id);
 
   if (!user) {
-    return res.status(BAD_REQUEST).send('User not found');
+    return res.status(BAD_REQUEST).send('Invalid link');
   }
 
   if (!token) {
-    return res.status(BAD_REQUEST).send('Missing token');
+    return res.status(BAD_REQUEST).send('Invalid link');
   }
 
   try {
     Auth.verifyToken(token);
     await UserModel.findByIdAndUpdate(id, { isVerified: true });
-    return res.status(OK).redirect('http://localhost:3000/emailVerified');
+    return res.status(OK).redirect('http://localhost:3000/');
   } catch (error) {
     return res.status(FORBIDDEN).send('Invalid authorization token');
   }
