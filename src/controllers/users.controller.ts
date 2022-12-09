@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
-import { Api } from '../common/base/Api';
 import { Auth } from '../common/base/Auth';
 import { NOT_FOUND, OK } from '../common/const/codes';
-import { USERS_URL } from '../common/const/urls';
 import { User } from '../types/User';
 import { MyUser, UserPublic } from '../types/UserPublic';
 import UserModel from '../models/User';
