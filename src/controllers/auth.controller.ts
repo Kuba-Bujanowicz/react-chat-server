@@ -103,24 +103,9 @@ const deleteAccount = async (req: Request, res: Response) => {
   return res.status(OK).send('User deleted successfully');
 };
 
-// Authenticate token
-const authenticateToken = async (req: Request, res: Response) => {
-  const token: string = req.cookies.token;
-
-  if (!token) return res.status(UNAUTHORIZED).send('Missing authorization token');
-
-  try {
-    Auth.verifyToken(token);
-    return res.status(OK).send('Token authenticated');
-  } catch (error) {
-    return res.status(FORBIDDEN).send('Invalid authorization token');
-  }
-};
-
 export const AuthController = {
   signup,
   signin,
   logout,
   deleteAccount,
-  authenticateToken,
 };
