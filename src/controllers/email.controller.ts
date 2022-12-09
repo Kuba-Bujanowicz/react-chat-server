@@ -14,7 +14,7 @@ const sentLink = async (req: Request, res: Response) => {
   console.log(token);
 
   const emailToken = Auth.generateToken(user.email, 5);
-  const html = `<p>Click the link below to verify your email</br>\n<a href="http://localhost:4000/verify-email/${user._id}/${emailToken}">Click here</a></p>`;
+  const html = `<p>Click the link below to verify your email</br>\n<a href="http://localhost:4000/api/verify-email/${user._id}/${emailToken}">Click here</a></p>`;
   try {
     await Email.send(user.email, 'Verify your email', html);
   } catch (error) {
